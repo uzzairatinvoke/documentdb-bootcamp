@@ -24,6 +24,7 @@ class DocumentResource extends JsonResource
             'description' => $this->description,
             'slug' => $this->slug,
             'file_url' => $this->file_url,
+            'category' => new CategoryResource($this->whenLoaded('category')),
             'user' => new UserResource($this->whenLoaded('user')),
             'created_at' => $this->created_at->format('d F Y'),
             'created_since' => $this->created_at->diffForHumans(),

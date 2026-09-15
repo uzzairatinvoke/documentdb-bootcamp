@@ -25,6 +25,7 @@ class DocumentRequest extends FormRequest
         return [
             'title' => 'required|min:6',
             'description' => 'required|min:6',
+            'category_id' => 'nullable|exists:categories,id',
             'document' => [
                 $this->isMethod('post') ? 'required' : 'nullable',
                 'file',

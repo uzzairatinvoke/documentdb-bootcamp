@@ -13,10 +13,32 @@ function DocumentForm() {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
+    category_id: "",
     file: null,
   });
+  const [categories, setCategories] = useState([]);
 
   const allowed = isEdit ? canEdit : canUpload;
+
+  useEffect(() => {
+    async function fetchCategories() {
+      if (!token) {
+        return;
+      }
+
+      try {
+        const response = await fetch(apiUrl("/categories"), {
+          headers: authHeaders(token),
+        });
+        const data = await response.json();
+        setCategories(data.data ?? []);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    fetchCategories();
+  }, [token]);
 
   useEffect(() => {
     async function loadDocument() {
@@ -35,6 +57,7 @@ function DocumentForm() {
         setFormData({
           title: document.title ?? "",
           description: document.description ?? "",
+          category_id: document.category?.id ? String(document.category.id) : "",
           file: null,
         });
       } catch (error) {
@@ -85,6 +108,7 @@ function DocumentForm() {
     const data = new FormData();
     data.append("title", formData.title);
     data.append("description", formData.description);
+    data.append("category_id", formData.category_id);
     if (formData.file) {
       data.append("document", formData.file);
     }
@@ -142,6 +166,23 @@ function DocumentForm() {
             onChange={handleInputChange}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2"
           />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Category</label>
+          <select
+            name="category_id"
+            value={formData.category_id}
+            onChange={handleInputChange}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2"
+          >
+            <option value="">No category</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div>

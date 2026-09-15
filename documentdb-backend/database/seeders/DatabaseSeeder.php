@@ -10,7 +10,10 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $this->call(RoleSeeder::class);
+        $this->call([
+            RoleSeeder::class,
+            CategorySeeder::class,
+        ]);
 
         $users = [
             ['name' => 'Admin User', 'email' => 'admin@example.com', 'role' => 'admin'],

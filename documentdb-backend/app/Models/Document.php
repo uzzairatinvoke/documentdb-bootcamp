@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-#[Fillable(['title', 'description', 'slug', 'document_key', 'user_id'])]
+#[Fillable(['title', 'description', 'slug', 'document_key', 'user_id', 'category_id'])]
 class Document extends Model
 {
     /** @use HasFactory<DocumentFactory> */
@@ -52,5 +52,19 @@ class Document extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * @return BelongsTo<Category, $this>
+     * 
+     * Policy
+     *   | - Document 1
+     *   | - Document 2
+     * 
+     */
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
+        
     }
 }
