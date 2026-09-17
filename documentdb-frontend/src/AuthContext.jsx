@@ -5,7 +5,7 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   // token
   const [token, setToken] = useState(() => localStorage.getItem("token"));
-  // user object
+  // user object (termasuk roles dari API)
   const [user, setUser] = useState(() => {
     const saved = localStorage.getItem("user");
     return saved ? JSON.parse(saved) : null;
@@ -25,7 +25,9 @@ export function AuthProvider({ children }) {
     setUser(null);
   }
 
-  // Slide matrix: admin = full, manager = upload+view, staff = view only
+  // Matriks UI (mesti sepadan dengan Gate/Policy di backend):
+  // admin = penuh | manager = muat naik + lihat | staff = lihat sahaja
+  // Nota: UI hanya sembunyikan butang — backend WAJIB semak authorization!
   const role = user?.roles?.[0] ?? null;
   const canUpload = role === "admin" || role === "manager";
   const canEdit = role === "admin";

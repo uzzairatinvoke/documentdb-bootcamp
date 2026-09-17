@@ -5,14 +5,22 @@ namespace App\Http\Controllers;
 use App\Http\Requests\DocumentRequest;
 use App\Http\Resources\DocumentResource;
 use App\Models\Document;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Gate;
 
 class DocumentsController extends Controller
 {
+    use AuthorizesRequests;
+
     public function index(Request $request): AnonymousResourceCollection
     {
+        // Semua role yang sudah login boleh lihat senarai (auth:sanctum cukup).
+        // Uncomment Policy di bawah untuk demo viewAny:
+        // $this->authorize('viewAny', Document::class);
+
         $query = Document::query()
             ->with(['user', 'category'])
             ->orderBy('created_at', 'asc');
@@ -30,6 +38,12 @@ class DocumentsController extends Controller
 
     public function store(DocumentRequest $request): DocumentResource
     {
+        // --- DEMO GATE (aktif) ---
+        Gate::authorize('create-document');
+
+        // --- DEMO POLICY (uncomment untuk demo Policy; comment Gate di atas jika mahu asingkan) ---
+        $this->authorize('create', Document::class);
+
         $documentKey = null;
 
         if ($request->hasFile('document')) {
@@ -52,11 +66,19 @@ class DocumentsController extends Controller
 
     public function show(Document $document): DocumentResource
     {
+        // $this->authorize('view', $document);
+
         return new DocumentResource($document->load(['user', 'category']));
     }
 
     public function update(DocumentRequest $request, Document $document): DocumentResource
     {
+        // --- DEMO GATE (aktif) ---
+        Gate::authorize('update-document');
+
+        // --- DEMO POLICY (uncomment untuk demo Policy) ---
+        // $this->authorize('update', $document);
+
         $data = [
             'title' => $request->input('title'),
             'description' => $request->input('description'),
@@ -75,9 +97,13 @@ class DocumentsController extends Controller
         return new DocumentResource($document->load(['user', 'category']));
     }
 
-    public function destroy(Request $request, Document $document): Response
+    public function destroy(Document $document): Response
     {
-        abort_unless($request->user()->hasRole('admin'), 403);
+        // --- DEMO GATE (aktif) ---
+        Gate::authorize('delete-document');
+
+        // --- DEMO POLICY (uncomment untuk demo Policy) ---
+        // $this->authorize('delete', $document);
 
         $document->delete();
 

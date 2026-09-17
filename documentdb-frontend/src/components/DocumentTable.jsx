@@ -139,6 +139,7 @@ function DocumentTable() {
           </p>
         </div>
         {canUpload && (
+          // Butang UI sahaja — backend Gate/Policy masih wajib semak semula
           <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
             <Link
               to="/documents/create"

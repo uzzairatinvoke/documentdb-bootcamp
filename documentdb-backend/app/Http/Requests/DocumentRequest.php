@@ -9,12 +9,9 @@ class DocumentRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        // Create: admin + manager. Update: admin only.
-        if ($this->isMethod('post')) {
-            return $this->user()->hasAnyRole(['admin', 'manager']);
-        }
-
-        return $this->user()->hasRole('admin');
+        // Authorization dipindah ke Gate/Policy dalam DocumentsController
+        // supaya demo Gate vs Policy lebih jelas. Form Request fokus pada validation.
+        return true;
     }
 
     /**

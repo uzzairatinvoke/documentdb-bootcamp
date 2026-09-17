@@ -56,15 +56,9 @@ class Document extends Model
 
     /**
      * @return BelongsTo<Category, $this>
-     * 
-     * Policy
-     *   | - Document 1
-     *   | - Document 2
-     * 
      */
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
-        
     }
 }

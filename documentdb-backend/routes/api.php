@@ -13,5 +13,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('me', [AuthController::class, 'me'])->name('me');
 
     Route::get('categories', [CategoriesController::class, 'index'])->name('categories.index');
+
+    // CRUD dokumen — authorization Gate/Policy di dalam DocumentsController.
+    // Contoh middleware role (guard di lapisan route), biarkan di-comment untuk demo Gate/Policy:
+    Route::delete('documents/{document}', [DocumentsController::class, 'destroy'])
+        ->middleware('role:admin')
+        ->name('documents.destroy');
     Route::apiResource('documents', DocumentsController::class);
 });
